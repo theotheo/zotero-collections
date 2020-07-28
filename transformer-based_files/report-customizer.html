@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"></head><body><div><pre id="log"></pre></div><script>const backend = "http://127.0.0.1:23119/report-customizer";
+window.onmessage = function(e) {
+  if (e.data) {
+    fetch(backend, { method: 'POST', body: e.data, headers: { 'Content-Type': 'application/json' } })
+      .then((response) => {
+        if (response.ok) {
+          window.parent.postMessage({ kind: 'saved' }, '*')
+        } else {
+          response.text().then(function (message) {
+            window.parent.postMessage({ kind: 'error', message }, '*')
+          })
+        }
+      })
+      .catch(err => {
+        window.parent.postMessage({ kind: 'error', message: err.message }, '*')
+      })
+  }
+}
+window.parent.postMessage({ kind: 'loaded' }, '*')</script></body></html>
